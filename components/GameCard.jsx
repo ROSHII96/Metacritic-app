@@ -1,28 +1,51 @@
-import { Image, StyleSheet, Text, View, Animated } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  Text,
+  View,
+  Animated,
+  Pressable,
+} from "react-native";
 import { useRef, useEffect } from "react";
+import { Score } from "./Score";
+import { Link } from "expo-router";
 
 export function GameCard({ game }) {
   return (
-    <View key={game.slug} style={styles.card}>
-      <Image source={{ uri: game.image }} style={styles.image} />
-      <Text style={styles.title}>{game.title}</Text>
-      <Text style={styles.description}>{game.description}</Text>
-      <Text style={styles.publisher}>Editor: {game.publisher}</Text>
-      <Text style={styles.genre}>Género: {game.genre}</Text>
-    </View>
+    <Link href={`/${game.slug}`} asChild>
+      <Pressable
+        className="rounded-xl border
+      border-black bg-gray-500/10 bg-gray-500/10 p-4 p-4 active:border-white/50 active:opacity-70"
+      >
+        <View className="flex-row gap-4" key={game.slug}>
+          <Image source={{ uri: game.image }} style={styles.image} />
+          <View className="flex-shrink ">
+            <Text className="mb-1" style={styles.title}>
+              {game.title}
+            </Text>
+            <Score score={game.score} maxScore={100} />
+            <Text className="mt-2 flex-shrink" style={styles.description}>
+              {game.description.slice(0, 100)} ...
+            </Text>
+            <Text style={styles.publisher}>Editor: {game.publisher}</Text>
+            <Text style={styles.genre}>Género: {game.genre}</Text>
+          </View>
+        </View>
+      </Pressable>
+    </Link>
   );
 }
 
 export function AnimatedGameCard({ game, index }) {
-const opacity = useRef(new Animated.Value(0)).current
-useEffect(() => {
-  Animated.timing(opacity, {
-    toValue: 1,
-    duration: 1000,
-    delay: index * 250,
-    useNativeDriver: true
-  }).start();
-  }, [opacity, index])
+  const opacity = useRef(new Animated.Value(0)).current;
+  useEffect(() => {
+    Animated.timing(opacity, {
+      toValue: 1,
+      duration: 1000,
+      delay: index * 250,
+      useNativeDriver: true,
+    }).start();
+  }, [opacity, index]);
 
   return (
     <Animated.View style={{ opacity }}>
